@@ -7,6 +7,7 @@ for the assignment.
 
 import unittest
 from csv_timeline_manager import CSVTimelineManager
+from csv_timeline_manager import TimelineEntry
 
 class TestCSVTimelineManager(unittest.TestCase):
 
@@ -14,21 +15,26 @@ class TestCSVTimelineManager(unittest.TestCase):
     pass
 
   def test_db_loading(self):
-    ctm = CSVTimelineManager("test_timeline_manager_1.csv")
-    timeline = ctm.get_timeline()
+    """
+    This test saves TimelineEntries into a file and then opens them and checks to see that they all exist.
+    Test case is small currently.
+    """
+    ctm_writer = CSVTimelineManager()
+    input_entries = [TimelineEntry('type1', 12, 'v2'), TimelineEntry('type2', 2, 'v42'), TimelineEntry('type1', 5, 'v4'),
+                     TimelineEntry('type1', 3, 'v424'), TimelineEntry('type2', 15, 'v432'), TimelineEntry('type2', 4, 'v4215')
+                     ]
+    for entry in input_entries:
+      ctm_writer.add_entry(entry)
 
-    ctm.save_timeline()
+    # timeline = ctm.get_timeline()
+    ctm_writer.save_timeline("test_timeline_manager_1.csv")
 
+    # output entries will be sorted
+    output_entries = sorted(input_entries, key=lambda e: e.time)
+    ctm_reader = CSVTimelineManager()
+    ctm_reader.load_timeline("test_timeline_manager_1.csv")
+    self.assertEquals(output_entries, ctm_reader.get_timeline())
 
-
-    # first line in the file:
-    self.assertEqual(cdm.get_value('Banana cake, made with sugar'), 47)
-
-    # random line in the file:
-    self.assertEqual(cdm.get_value('Peach, average'), 42)
-
-    # last line in the file:
-    self.assertEqual(cdm.get_value('Honey, average'), 61)
 
 if __name__ == '__main__':
   unittest.main()

@@ -1,10 +1,14 @@
 """
-This class reads a CSV database of the following format:
+Reads a CSV database of the following format:
 
-id, key, value
+id (int), key (string), value (int)
 
-Assumptions:
-- 3 and only 3 columns can be used
+and then stores a key => value mapping.
+
+Caller can access the value for a key by calling get_value(key)
+
+Notes:
+- exactly 3 columns in CSV file
 - the first row will be ignored (used for labels)
 - keys are unique (second column)
 - values are integers
@@ -16,7 +20,6 @@ NUMBER_OF_COLUMNS = 3  # there should always only be 3 columns as per our assump
 
 class CSVDatabaseManager:
   def __init__(self, csv_path):
-    # TODO: open file at that path and load stuff into values
     self.key_to_value = {}
     with open(csv_path, 'r') as csvfile:
       next(csvfile)  # skip the first line
