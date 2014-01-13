@@ -50,7 +50,7 @@ class CSVTimelineManager:
         type_ = row[0]  # underscore after to not conflict with built-in type
         time = int(row[1].strip())
         value = row[2].strip()
-        self.__add_entry_without_sorting(TimelineEntry(type_, time, value))
+        self.add_entry_without_sorting(TimelineEntry(type_, time, value))
 
     self.__sort_timeline()  # sort after adding all entries
 
@@ -61,17 +61,17 @@ class CSVTimelineManager:
     """
     return self.timeline
 
-  def __add_entry_without_sorting(self, entry):
+  def add_entry_without_sorting(self, entry):
     self.timeline.append(entry)
 
   def __sort_timeline(self):
     """ Sorts timeline by time"""
     self.timeline.sort(key=lambda elem: elem.time)
 
-  def add_entry(self, entry):
+  def add_entry_with_sorting(self, entry):
     """Add entry. Sorts array after each entry. Don't use this function if you plan
     on adding a large number of entries."""
-    self.__add_entry_without_sorting(entry)
+    self.add_entry_without_sorting(entry)
     self.__sort_timeline()
 
   def save_timeline(self, csv_path):

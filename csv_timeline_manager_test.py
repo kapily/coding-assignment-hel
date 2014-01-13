@@ -24,7 +24,7 @@ class TestCSVTimelineManager(unittest.TestCase):
                      TimelineEntry('type1', 3, 'v424'), TimelineEntry('type2', 15, 'v432'), TimelineEntry('type2', 4, 'v4215')
                      ]
     for entry in input_entries:
-      ctm_writer.add_entry(entry)
+      ctm_writer.add_entry_with_sorting(entry)
 
     # timeline = ctm.get_timeline()
     ctm_writer.save_timeline("test_timeline_manager_1.csv")
