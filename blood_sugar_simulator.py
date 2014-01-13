@@ -31,7 +31,6 @@ class BloodSugarSimulator:
     # on the body in this format:
     active_influencers = []
     previous_time = None
-    # previous_time = input_timeline.get_timeline()[0].time
 
     # input is minutes
 
@@ -54,10 +53,6 @@ class BloodSugarSimulator:
     # run out of memory for really large timelines
     for current_time in xrange(start_time, end_time + 1 + MINUTES_AFTER_LAST_EVENT):
       current_time_index = current_time - start_time
-      #
-      # set current score to previous score
-
-      # output_timeline_list
 
       # Loop to add all the factors that occur at this current time (because you might eat multiple things the same
       # minute, etc)
@@ -73,9 +68,6 @@ class BloodSugarSimulator:
           bs_change_per_min = current_element.value / 60
 
         last_food_time = current_time
-        # TODO: increment the blood sugar for the next couple minutes
-        bs_change_per_min = current_element.value / 120
-        output_timeline_list[i] += bs_change_per_min
 
         # Update all of the following blood sugars
         # last_blood_sugar = output_timeline_list[cur]
@@ -91,52 +83,20 @@ class BloodSugarSimulator:
 
       # adjust blood sugar after 120 and 60 minutes, respectively
       if (current_time - last_food_time) > 120 and (current_time - last_exercise_time) > 60:
-        previous_blood_sugar = output_timeline_list[current_time]
+        assert(output_timeline_list[i] is None)
+        assert(current_time != start_time)
+        previous_blood_sugar = output_timeline_list[i - 1]
 
         # we first set the current blood sugar to the previous minute's blood sugar and adjust by
         # 1 to approach 80
         if output_timeline_list[current_time_index] > 80:
-          input_timeline[current_time] = previous_blood_sugar - 1
+          output_timeline_list[current_time_index] = previous_blood_sugar - 1
         if output_timeline_list[current_time_index] < 80:
-          input_timeline[current_time] = previous_blood_sugar + 1
+          output_timeline_list[current_time_index] = previous_blood_sugar + 1
 
       # by this point, the blood sugar for the current time would have been filled
       if output_timeline_list[current_time_index] > 150:
         glycation += 1
-
-
-      active_excercise = False
-      active_food = False
-
-      # check for glycation
-
-
-    # to lookup a time time_to_lookup in timeline, use to find the appropriate index:
-    # timeline[time_to_lookup - start_time]
-
-    # in xrange(start_min, end_min + 1):
-
-
-
-
-    for entry in input_timeline:
-      now_time = entry.time
-
-      if active_influencers:
-        # copy all the influences from the previous_time (exclusive) to now_time (inclusive)
-
-      per_minute_change = None
-      if entry.type == "excercise":
-        per_minute_change = exercise_db_manager[entry.value]
-
-      if entry.type == "food":
-        per_minute_change = food_db_manager[entry.value] * -1
-
-
-
-    # edge case: get the last one
-    end_time = input_timeline.get_timeline()[-1].time
-
 
 
 def main():
