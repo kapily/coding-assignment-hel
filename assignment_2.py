@@ -19,17 +19,46 @@ we could have client-side js which only sends the id's with the correct amount a
 
 """
 
+from random import shuffle
 
+import time
+
+SECONDS_TILL_EXPIRATION = 60
+NUMBER_OF_TOP_USERS = 500
+
+
+class User:
+  def __init__(self, user_id):
+    self.id = "User" + str(user_id)  # again just for testing
+    self.rank = id  # rank == id, for test data
+
+
+class State:
+  def __init__(self):
+    self.random_ids = None  # must be set
+    self.expires = None  # TODO: need to set expiration
 
 
 # the list of top 500 users. Assume it gets updated whenever the top 500 changes.
 # for testing purposes, we just have id's from 0 to 499, but in production, we
 # would have the actually id's of the users
-top_500 = range(500)
+top_500 = [User(i) for i in range(NUMBER_OF_TOP_USERS)]
+
 
 def get_top_users(offset, limit, state):
   #returns an array of user ids that can be fetched from the database
-get_top_user_ids(0,5, list_id) #returns the top 5 user ids
-get_top_user_ids(5,5, list_id) #returns the next ‘page’, ranks 5-9, using the same list id ensure we have the same random ordering as with the previous call so there are no repeats
+  now = int(time.time())
+  if state is None or now > state.expires:
+    state.expires = now + SECONDS_TILL_EXPIRATION
+    state.random_ids = shuffle(range(NUMBER_OF_TOP_USERS))  # this logic can be done client-side
 
+  # now we return the id's requested since it is stored in the state
+  end = min((NUMBER_OF_TOP_USERS - 1), offset + limit)  # make sure the last element is <= 499
+  ids_requested = state.random_ids[offset:end]
+  result = []  # result is an array of User objects
+  for id_requested in ids_requested:
+    assert(id_requested >= 0)
+    assert(id_requested < NUMBER_OF_TOP_USERS)
+    result.append(top_500[id_requested])
+  return result
 
